@@ -26,7 +26,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/rs/xid"
+	"github.com/google/uuid"
 )
 
 var errInvalidFilter = fmt.Errorf("invalid filter")
@@ -153,7 +153,11 @@ func (c *Config) AddRule(opts Options) error {
 		filter.Tag = Tag{}
 	}
 	if opts.ID == "" {
-		opts.ID = xid.New().String()
+		generatedID, err := uuid.NewRandom()
+		if err != nil {
+			return err
+		}
+		opts.ID = generatedID.String()
 	}
 
 	destBucket := opts.DestBucket
